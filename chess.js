@@ -7,7 +7,7 @@ board = [['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
 ['', '', '', '', '', '', '', ''],
 ['', '', '', '', '', '', '', ''],
 ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP'],
-['wR', 'wN', 'wB', 'wK', 'wQ', 'wB', 'wN', 'wR'],
+['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR'],
 ]
 
 var alreadyClicked = false;
@@ -31,6 +31,8 @@ var pieceImages = {
 
 var whiteToMove = true;
 
+var possibleMoves = [];
+
 for (i = 0; i < 8; i++) {
     for (j = 0; j < 8; j++) {
         $(`#${i}${j}`).click(function () {
@@ -44,53 +46,85 @@ for (i = 0; i < 8; i++) {
                     currentPiece = piece
                     currentPosition = `${i}${j}`
                     alreadyClicked = !alreadyClicked;
+
+                    switch (piece) {
+                        case 'wP':
+                            if (currentPosition[0] == 6) {
+                                possibleMoves = [`5${j}`, `4${j}`]
+                            } else {
+                                possibleMoves = [`${i-1}${j}`]
+                            }
+                            if (board[i - 1][j - 1 + 2].includes('b')){
+                                possibleMoves.push(`${i-1}${j - 1 + 2}`)
+                            }
+                            if (board[i - 1][j - 1].includes('b')) {
+                                possibleMoves.push(`${i-1}${j - 1}`)
+                            }
+                    }
+
                 }
 
                 if (!whiteToMove && piece.includes('b')) {
                     currentPiece = piece
                     currentPosition = `${i}${j}`
                     alreadyClicked = !alreadyClicked;
+
+                    switch (piece) {
+                        case 'bP':
+                            if (currentPosition[0] == 1) {
+                                possibleMoves = [`2${j}`, `3${j}`]
+                            } else {
+                                possibleMoves = [`${i-1+2}${j}`] //javascript e muito zoado
+                            }
+                            if (board[i - 1 + 2][j - 1 + 2].includes('w')) {
+                                
+                                possibleMoves.push(`${i-1+2}${j - 1 + 2}`)
+                            }
+                            if (board[i - 1 + 2][j - 1].includes('w')) {
+                                
+                                possibleMoves.push(`${i-1+2}${j - 1}`)
+                            }
+                    }
                 }
 
             } else {
-                if (alreadyClicked == true && piece == '') {
-                    $(`#${currentPosition} > img`).remove();
-                    $(`#${i}${j}`).prepend($('<img>', { class: 'img', src: pieceImages[currentPiece] }))
-                    alreadyClicked = false;
-                    board[currentPosition[0]][currentPosition[1]] = '';
-                    board[i][j] = currentPiece;
-
-                    whiteToMove = !whiteToMove;
-
-                } else {
-
-                    if (whiteToMove && board[i][j].includes('b')) {
-                        $(`#${i}${j} > img`).remove();
+                console.log(board)
+                if (possibleMoves.includes(`${i}${j}`)) {
+                    if (alreadyClicked == true && piece == '') {
                         $(`#${currentPosition} > img`).remove();
                         $(`#${i}${j}`).prepend($('<img>', { class: 'img', src: pieceImages[currentPiece] }))
-
                         alreadyClicked = false;
                         board[currentPosition[0]][currentPosition[1]] = '';
                         board[i][j] = currentPiece;
 
                         whiteToMove = !whiteToMove;
-                    } else if (!whiteToMove && board[i][j].includes('w')) {
-                        $(`#${i}${j} > img`).remove();
-                        $(`#${currentPosition} > img`).remove();
-                        $(`#${i}${j}`).prepend($('<img>', { class: 'img', src: pieceImages[currentPiece] }))
 
-                        alreadyClicked = false;
-                        board[currentPosition[0]][currentPosition[1]] = '';
-                        board[i][j] = currentPiece;
+                    } else {
 
-                        whiteToMove = !whiteToMove;
+                        if (whiteToMove && board[i][j].includes('b')) {
+                            $(`#${i}${j} > img`).remove();
+                            $(`#${currentPosition} > img`).remove();
+                            $(`#${i}${j}`).prepend($('<img>', { class: 'img', src: pieceImages[currentPiece] }))
+
+                            alreadyClicked = false;
+                            board[currentPosition[0]][currentPosition[1]] = '';
+                            board[i][j] = currentPiece;
+
+                            whiteToMove = !whiteToMove;
+                        } else if (!whiteToMove && board[i][j].includes('w')) {
+                            $(`#${i}${j} > img`).remove();
+                            $(`#${currentPosition} > img`).remove();
+                            $(`#${i}${j}`).prepend($('<img>', { class: 'img', src: pieceImages[currentPiece] }))
+
+                            alreadyClicked = false;
+                            board[currentPosition[0]][currentPosition[1]] = '';
+                            board[i][j] = currentPiece;
+
+                            whiteToMove = !whiteToMove;
+                        }
                     }
-
                 }
-
-
             }
-
 
         })
     }
