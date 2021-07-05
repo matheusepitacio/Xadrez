@@ -1,0 +1,32 @@
+html, body {
+    width: 100%;
+}
+table {
+    margin: 0 auto;
+    border: 1px solid black;
+    table-layout:fixed;
+}
+
+tr>td {
+    margin-bottom: 1em;
+}
+
+td {
+    width: 65px;
+    height: 65px;
+}
+
+td.black{
+    background-color: #658181;
+}
+
+td.white {
+    background-color: #CCD1D1;
+}
+
+.img{
+    max-width: 100%;
+    height: 100%;
+    width: 100%; 
+    display: block;
+}
